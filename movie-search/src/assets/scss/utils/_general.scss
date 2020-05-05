@@ -1,0 +1,47 @@
+html {
+  height: 100%;
+
+  font-size: $mainFontSize;
+  line-height: $mainLineHeight;
+  color: $mainFontColor;
+
+  @media screen and (max-width: $desktopWidth) {
+    font-size: 15px;
+  }
+
+  @media screen and (max-width: $tableWidth) {
+    font-size: 14px;
+  }
+
+  @media screen and (max-width: $phoneWidth) {
+    font-size: 13px;
+  }
+}
+
+body {
+  position: relative;
+
+  font-weight: $mainFontWeight;
+  line-height: $mainLineHeight;
+  font-family: $mainFont;
+  color: $mainFontColor;
+
+  background-color: $dark;
+
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+main {
+  position: relative;
+  z-index: 1;
+
+  height: calc(100vh - 6.875rem);
+  padding-top: 6.875rem;
+
+  .text {
+    font-size: rem(40);
+    text-align: center;
+    color: $success;
+  }
+}

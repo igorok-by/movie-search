@@ -1,0 +1,41 @@
+// Font
+$mainFont                : "Muli", Helvetica, Arial, sans-serif;
+$secondFont              : "Indie Flower", cursive;
+
+$lgDesktopWidth          : 1440px;
+$desktopWidth            : 1199px;
+$smDesktopWidth          : 991px;
+$tableWidth              : 767px;
+$phoneWidth              : 575px;
+$smPhoneWidth            : 320px;
+
+// Main color
+$primary                 : #fcbfb7 !default;
+$secondary               : #334e58 !default;
+$success                 : #a69888 !default;
+$info                    : #6b6d76 !default;
+$warning                 : #ff9800 !default;
+$danger                  : #e51c23 !default;
+$light                   : #ffffff !default;
+$dark                    : #33261d !default;
+$black                   : #000000 !default;
+
+// Secondary color
+$primary-dark            : #1B75BF !default;
+$primary-light           : #6CB7F4 !default;
+$warning-dark            : #CC7A00 !default;
+$warning-light           : #FFB84D !default;
+$info-dark               : #6E1B7D !default;
+$info-light              : #EA83FC !default;
+$success-dark            : #367D38 !default;
+$success-light           : #6DFC71 !default;
+
+// Size
+$mainFontColor           : $primary;
+$mainFontSize            : 16px;
+$mainFontWeight          : normal;
+$mainLineHeight          : 1;
+
+// Transition
+$def-transition          : all .4s cubic-bezier(0.25, 0.1, 0.25, 1);
+$long-transition         : all .8s cubic-bezier(0.25, 0.1, 0.25, 1);

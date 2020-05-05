@@ -1,0 +1,18 @@
+// px to vw
+$vw-viewport: 1920;
+
+@function vw($vw-data) {
+  $vw-context: $vw-viewport * 0.01;
+  @return $vw-data / $vw-context * 1vw;
+}
+
+// px to rem
+@function rem($pixels, $context: $mainFontSize) {
+  @if (unitless($pixels)) {
+    $pixels: $pixels * 1px;
+  }
+  @if (unitless($context)) {
+    $context: $context * 1px;
+  }
+  @return $pixels / $context * 1rem;
+}
