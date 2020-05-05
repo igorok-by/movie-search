@@ -1,12 +1,17 @@
 .header {
-  z-index: 2;
-
+  display: flex;
+  justify-content: center;
+  align-items: center;
   width: 100%;
   padding: rem(30) 0 rem(30);
-}
 
-.header__wrap {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  font-family: $secondFont;
+
+  background-color: $secondary;
+
+  h1 {
+    margin: 0;
+
+    font-size: rem(50);
+  }
 }
