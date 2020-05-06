@@ -1,0 +1,39 @@
+.footer {
+  width: 100%;
+  padding: rem(30) 0 rem(30);
+
+  font-family: $secondFont;
+
+  background-color: $secondary;
+}
+
+.footer__link {
+  display: flex;
+  align-items: center;
+
+  font-size: rem(22);
+  font-family: $secondFont;
+  color: $mainFontColor;
+
+  transition: $def-transition;
+
+  svg {
+    width: rem(20);
+    height: rem(20);
+    margin-right: rem(10);
+
+    transition: $def-transition;
+
+    fill: $mainFontColor;
+  }
+
+  &:hover {
+    color: $dark;
+
+    transform: scale(1.1);
+
+    svg {
+      fill: $dark;
+    }
+  }
+}

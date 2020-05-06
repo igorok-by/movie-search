@@ -21,6 +21,10 @@ html {
 body {
   position: relative;
 
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+
   font-weight: $mainFontWeight;
   line-height: $mainLineHeight;
   font-family: $mainFont;
@@ -34,9 +38,8 @@ body {
 
 main {
   position: relative;
-  z-index: 1;
 
-  height: calc(100vh - 6.875rem);
+  flex-grow: 1;
   padding-top: 6.875rem;
 
   .text {
@@ -44,4 +47,21 @@ main {
     text-align: center;
     color: $success;
   }
+}
+
+*,
+::after,
+::before {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+a {
+  text-decoration: none;
+}
+
+a:active,
+a:hover {
+  outline: 0;
 }
