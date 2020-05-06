@@ -40,13 +40,7 @@ main {
   position: relative;
 
   flex-grow: 1;
-  padding-top: 6.875rem;
-
-  .text {
-    font-size: rem(40);
-    text-align: center;
-    color: $success;
-  }
+  padding-top: 8.5vh;
 }
 
 *,
