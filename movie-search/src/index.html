@@ -17,23 +17,48 @@
 
   <!-- main wrapper -->
   <main>
-    <div class="container">
+    <div class="container container--column">
       <form action="/" class="search">
-        <input class="search__input" type="text" autocomplete="off" spellcheck="false" placeholder="Search movie">
+        <input class="search__input" type="text" autocomplete="off" spellcheck="false" placeholder="Search movie" autofocus>
         <svg class="search__input-icon"><use xlink:href="./assets/img/sprite.svg#icon-search"></use></svg>
-        <button class="search__submit">Go!</button>
+        <button class="search__submit" type="submit">Go!</button>
         <button class="search__reset" type="reset">
           <svg><use xlink:href="./assets/img/sprite.svg#icon-close"></use></svg>
         </button>
       </form>
+
+      <p class="result">Showing results for ...</p>
+
+      <div class="card-container">
+        <div class="card-row">
+          <div class="card">
+            <a href="#" class="card__name">Name of movie</a>
+            <img class="card__img" src="https://www.omdbapi.com/src/poster.jpg" alt="poster">
+            <p class="card__data">1987</p>
+            <p class="card__data card__data--stars">6.8</p>
+          </div>
+          <div class="card">
+            <a href="#" class="card__name">Name of movie</a>
+            <img class="card__img" src="https://www.omdbapi.com/src/poster.jpg" alt="poster">
+            <p class="card__data">1987</p>
+            <p class="card__data card__data--stars">6.8</p>
+          </div>
+          <div class="card">
+            <a href="#" class="card__name">Name of movie</a>
+            <img class="card__img" src="https://www.omdbapi.com/src/poster.jpg" alt="poster">
+            <p class="card__data">1987</p>
+            <p class="card__data card__data--stars">6.8</p>
+          </div>
+        </div>
+      </div>
     </div>
   </main><!-- end main wrapper -->
 
   <!-- footer -->
   <footer class="footer">
     <div class="container container--sp-between">
-      <a href="https://rs.school/" class="footer__link">RSS School 2020q1</a>
-      <a href="https://github.com/igorok-by" class="footer__link footer__link--github">
+      <a href="https://rs.school/" class="footer__link" target="blank">RSS School 2020q1</a>
+      <a href="https://github.com/igorok-by" class="footer__link footer__link--github" target="blank">
         <svg><use xlink:href="./assets/img/sprite.svg#icon-git"></use></svg>
         igorok-by</a>
     </div>
