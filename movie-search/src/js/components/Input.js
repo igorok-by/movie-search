@@ -1,6 +1,6 @@
-import create from './utils/create';
+import create from '../utils/create';
 
-class Input {
+export default class Input {
   constructor() {
     this.input = create('input', 'search__input', null, null, ['type', 'text'], ['autocomplete', 'off'], ['spellcheck', 'false'], ['placeholder', 'Search movie'], ['autofocus', true]);
 
@@ -13,5 +13,3 @@ class Input {
     this.formSearch.insertAdjacentHTML('beforeend', '<svg class="search__input-icon"><use xlink:href="./assets/img/sprite.svg#icon-search"></use></svg>');
   }
 }
-
-export default Input;
