@@ -13,4 +13,4 @@ export const footer = create('footer', 'footer',
 
 export const main = create('main');
 
-export const { body } = document;
+export const linkForName = (id) => `https://www.omdbapi.com/?i=${id}&apikey=50fb5534`;

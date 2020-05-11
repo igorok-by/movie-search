@@ -4,16 +4,21 @@ import Card from './components/Card';
 import Input from './components/Input';
 
 window.onload = () => {
-  const card = new Card({
-    name: 'Name of mov',
-    linkForName: '###',
-    linkOfPoster: 'N/A',
-    yearOfRelease: 1984,
-    ratingIMDb: 6.6,
-  });
+  // const card = new Card({
+  //   name: 'Name of mov',
+  //   linkForName: '###',
+  //   linkOfPoster: 'N/A',
+  //   yearOfRelease: 1984,
+  //   ratingIMDb: 6.6,
+  // });
 
-  const input = new Input();
+  // const input = new Input();
 
-  constants.main.append(input.formSearch, card.container);
-  constants.body.append(constants.header, constants.main, constants.footer);
+  // constants.main.append(input.formSearch, card.container);
+  // constants.body.append(constants.header, constants.main, constants.footer);
+
+  const searchApp = new SearchApp();
+  searchApp.init();
+  // searchApp.renderCard();
+  // searchApp.getDataFromAPI(1);
 };
