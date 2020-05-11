@@ -1,5 +1,7 @@
 import create from './create';
 
+const apiKey = '50fb5534';
+
 export const header = create('header', 'header', '<h1>MovieSearch</h1>', null);
 
 export const footer = create('footer', 'footer',
@@ -13,4 +15,8 @@ export const footer = create('footer', 'footer',
 
 export const main = create('main');
 
-export const linkForName = (id) => `https://www.omdbapi.com/?i=${id}&apikey=50fb5534`;
+export const linkForName = (id) => `https://www.imdb.com/title/${id}/videogallery/`;
+
+export const urlSearchWord = (searchedWord, page) => `https://www.omdbapi.com/?s=${searchedWord}&page=${page}&apikey=${apiKey}`;
+
+export const urlIMDbRating = (id) => `https://www.omdbapi.com/?i=${id}&apikey=${apiKey}`;

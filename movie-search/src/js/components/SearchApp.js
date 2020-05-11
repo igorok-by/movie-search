@@ -21,22 +21,33 @@ export default class SearchApp {
     this.cards = [];
   }
 
-  async getDataFromAPI(inputValue, page) {
-    this.url = `https://www.omdbapi.com/?s=${inputValue}&page=${page}&apikey=50fb5534`;
+  async getDataFromAPI(url) {
+    this.url = url;
 
     const res = await fetch(this.url);
     const data = await res.json();
     return data;
   }
 
-  createArrayOfCards(data) {
-    data.Search.map((dataOfCard) => {
+  async getArrayOfRatings(data) {
+    const arrayOfIDs = data.Search.map(
+      (dataOfCard) => this.getDataFromAPI(constants.urlIMDbRating(dataOfCard.imdbID)),
+    );
+    const dataFromIMDb = await Promise.all(arrayOfIDs);
+
+    return dataFromIMDb.map((aboutFilm) => aboutFilm.Ratings[0].Value);
+  }
+
+  async createArrayOfCards(data) {
+    const ratings = await this.getArrayOfRatings(data);
+
+    data.Search.map((dataOfCard, indexOfCard) => {
       const card = new Card({
         name: dataOfCard.Title,
         linkForName: constants.linkForName(dataOfCard.imdbID),
         linkOfPoster: dataOfCard.Poster,
         yearOfRelease: dataOfCard.Year,
-        ratingIMDb: 6.6,
+        ratingIMDb: ratings[indexOfCard],
       });
       this.cards.push(card.container);
       return this.cards;
@@ -46,9 +57,9 @@ export default class SearchApp {
   }
 
   async renderCards(page) {
-    const dataFromAPI = await this.getDataFromAPI(this.inputValue, page);
+    const dataFromAPI = await this.getDataFromAPI(constants.urlSearchWord(this.inputValue, page));
 
-    this.createArrayOfCards(dataFromAPI);
+    await this.createArrayOfCards(dataFromAPI);
 
     this.swiper.append(...this.cards);
     this.swiperContainer.append(this.swiper);
