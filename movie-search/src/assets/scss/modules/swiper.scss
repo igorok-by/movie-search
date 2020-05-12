@@ -1,0 +1,36 @@
+.swiper-container--sup {
+  position: relative;
+
+  width: 100%;
+}
+
+.swiper-container {
+  width: calc(100% - 60px);
+}
+
+.swiper-slide {
+  height: unset;
+  min-height: 100%;
+}
+
+.swiper-button-next {
+  right: -10px;
+}
+
+.swiper-button-prev {
+  left: -10px;
+}
+
+.swiper-button-next,
+.swiper-button-prev {
+  color: $primary;
+
+  &:focus {
+    outline: none;
+  }
+
+  &.swiper-button-disabled {
+    visibility: hidden;
+    opacity: 0;
+  }
+}

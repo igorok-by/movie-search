@@ -1,3 +1,4 @@
+import Swiper from 'swiper';
 import * as constants from '../utils/constants';
 import create from '../utils/create';
 import Card from './Card';
@@ -14,9 +15,13 @@ export default class SearchApp {
     this.inputValue = 'dream';
 
     this.mainContainer = create('div', 'container container--column');
-    this.swiperContainer = create('div', 'card-container');
-    this.swiper = create('div', 'card-row');
+    this.swiperSupContainer = create('div', 'swiper-container--sup');
+    this.swiperContainer = create('div', 'swiper-container');
+    this.swiper = create('div', 'swiper-wrapper');
+    this.swiperBtnPrev = create('div', 'swiper-button-prev');
+    this.swiperBtnNext = create('div', 'swiper-button-next');
     this.resultDescr = create('p', 'result');
+
     this.url = '';
     this.cards = [];
   }
@@ -41,7 +46,7 @@ export default class SearchApp {
   async createArrayOfCards(data) {
     const ratings = await this.getArrayOfRatings(data);
 
-    data.Search.map((dataOfCard, indexOfCard) => {
+    data.Search.forEach((dataOfCard, indexOfCard) => {
       const card = new Card({
         name: dataOfCard.Title,
         linkForName: constants.linkForName(dataOfCard.imdbID),
@@ -49,8 +54,8 @@ export default class SearchApp {
         yearOfRelease: dataOfCard.Year,
         ratingIMDb: ratings[indexOfCard],
       });
+
       this.cards.push(card.container);
-      return this.cards;
     });
 
     return this.cards;
@@ -63,9 +68,26 @@ export default class SearchApp {
 
     this.swiper.append(...this.cards);
     this.swiperContainer.append(this.swiper);
-    this.mainContainer.append(this.form.formSearch, this.resultDescr, this.swiperContainer);
+    this.swiperSupContainer.append(this.swiperContainer, this.swiperBtnNext, this.swiperBtnPrev);
+    this.mainContainer.append(this.form.formSearch, this.resultDescr, this.swiperSupContainer);
     this.main.append(this.mainContainer);
     this.body.append(this.header, this.main, this.footer);
+
+    const swiper = new Swiper(this.swiperContainer, {
+      slidesPerView: 4,
+      spaceBetween: 20,
+      centerInsufficientSlides: true,
+      watchOverflow: true,
+      grabCursor: true,
+      observer: true,
+
+      navigation: {
+        nextEl: this.swiperBtnNext,
+        prevEl: this.swiperBtnPrev,
+      },
+    });
+    console.log(swiper.params);
+    console.log(swiper.navigation.nextEl);
   }
 
 
