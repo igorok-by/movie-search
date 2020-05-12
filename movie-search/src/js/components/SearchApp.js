@@ -12,16 +12,18 @@ export default class SearchApp {
     this.body = document.body;
 
     this.form = new Input();
-    this.inputValue = 'dream';
+    this.currentWord = 'paradise';
+    this.currentPage = 1;
 
     this.mainContainer = create('div', 'container container--column');
     this.swiperSupContainer = create('div', 'swiper-container--sup');
     this.swiperContainer = create('div', 'swiper-container');
-    this.swiper = create('div', 'swiper-wrapper');
+    this.swiperSubContainer = create('div', 'swiper-wrapper');
     this.swiperBtnPrev = create('div', 'swiper-button-prev');
     this.swiperBtnNext = create('div', 'swiper-button-next');
     this.resultDescr = create('p', 'result');
 
+    this.swiper = {};
     this.url = '';
     this.cards = [];
   }
@@ -43,10 +45,14 @@ export default class SearchApp {
     return dataFromIMDb.map((aboutFilm) => aboutFilm.Ratings[0].Value);
   }
 
-  async createArrayOfCards(data) {
-    const ratings = await this.getArrayOfRatings(data);
+  async createArrayOfCards() {
+    const dataFromAPI = await this.getDataFromAPI(
+      constants.urlSearchWord(this.currentWord, this.currentPage),
+    );
+    const ratings = await this.getArrayOfRatings(dataFromAPI);
+    this.cards = [];
 
-    data.Search.forEach((dataOfCard, indexOfCard) => {
+    dataFromAPI.Search.forEach((dataOfCard, indexOfCard) => {
       const card = new Card({
         name: dataOfCard.Title,
         linkForName: constants.linkForName(dataOfCard.imdbID),
@@ -61,19 +67,36 @@ export default class SearchApp {
     return this.cards;
   }
 
-  async renderCards(page) {
-    const dataFromAPI = await this.getDataFromAPI(constants.urlSearchWord(this.inputValue, page));
+  doSearching(e) {
+    e.preventDefault();
+    if (this.form.input.value && this.form.input.value !== this.currentWord) {
+      this.currentPage = 1;
+      this.currentWord = this.form.input.value;
+      this.swiper.removeAllSlides();
+      this.addCardsToSwiper();
+    }
+  }
 
-    await this.createArrayOfCards(dataFromAPI);
+  async addCardsToSwiper() {
+    await this.createArrayOfCards();
+    this.swiper.appendSlide(this.cards);
+  }
 
-    this.swiper.append(...this.cards);
-    this.swiperContainer.append(this.swiper);
-    this.swiperSupContainer.append(this.swiperContainer, this.swiperBtnNext, this.swiperBtnPrev);
-    this.mainContainer.append(this.form.formSearch, this.resultDescr, this.swiperSupContainer);
-    this.main.append(this.mainContainer);
-    this.body.append(this.header, this.main, this.footer);
+  resetCurrentWord() {
+    this.currentWord = '';
+  }
 
-    const swiper = new Swiper(this.swiperContainer, {
+  bindEventListeners() {
+    this.form.formSearch.addEventListener('submit', (event) => this.doSearching(event));
+    this.form.formSearch.addEventListener('reset', () => this.resetCurrentWord());
+  }
+
+  async renderSwiper() {
+    await this.createArrayOfCards();
+
+    this.swiperSubContainer.append(...this.cards);
+
+    this.swiper = new Swiper(this.swiperContainer, {
       slidesPerView: 4,
       spaceBetween: 20,
       centerInsufficientSlides: true,
@@ -86,12 +109,19 @@ export default class SearchApp {
         prevEl: this.swiperBtnPrev,
       },
     });
-    console.log(swiper.params);
-    console.log(swiper.navigation.nextEl);
   }
 
+  renderLayout() {
+    this.swiperContainer.append(this.swiperSubContainer);
+    this.swiperSupContainer.append(this.swiperContainer, this.swiperBtnNext, this.swiperBtnPrev);
+    this.mainContainer.append(this.form.formSearch, this.resultDescr, this.swiperSupContainer);
+    this.main.append(this.mainContainer);
+    this.body.append(this.header, this.main, this.footer);
+  }
 
   init() {
-    this.renderCards(2);
+    this.renderLayout();
+    this.renderSwiper();
+    this.bindEventListeners();
   }
 }

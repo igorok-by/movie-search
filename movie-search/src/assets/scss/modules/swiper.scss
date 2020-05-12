@@ -30,7 +30,6 @@
   }
 
   &.swiper-button-disabled {
-    visibility: hidden;
-    opacity: 0;
+    opacity: 0.2;
   }
 }
