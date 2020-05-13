@@ -14,6 +14,8 @@ export default class SearchApp {
     this.form = new Input();
     this.currentWord = 'paradise';
     this.currentPage = 1;
+    this.totalPages = 1;
+    this.currentIndex = 0;
 
     this.mainContainer = create('div', 'container container--column');
     this.swiperSupContainer = create('div', 'swiper-container--sup');
@@ -25,7 +27,6 @@ export default class SearchApp {
 
     this.swiper = {};
     this.url = '';
-    this.cards = [];
   }
 
   async getDataFromAPI(url) {
@@ -42,17 +43,26 @@ export default class SearchApp {
     );
     const dataFromIMDb = await Promise.all(arrayOfIDs);
 
-    return dataFromIMDb.map((aboutFilm) => aboutFilm.Ratings[0].Value);
+    return dataFromIMDb.map((aboutFilm) => aboutFilm.imdbRating);
+  }
+
+  async getDataForCards() {
+    const data = await this.getDataFromAPI(
+      constants.urlSearchWord(this.currentWord, this.currentPage),
+    );
+
+    this.totalPages = Math.ceil(Number(data.totalResults) / constants.elementsInPage);
+
+    return data;
   }
 
   async createArrayOfCards() {
-    const dataFromAPI = await this.getDataFromAPI(
-      constants.urlSearchWord(this.currentWord, this.currentPage),
-    );
-    const ratings = await this.getArrayOfRatings(dataFromAPI);
-    this.cards = [];
+    const arrayOfCards = [];
 
-    dataFromAPI.Search.forEach((dataOfCard, indexOfCard) => {
+    const dataForCards = await this.getDataForCards();
+    const ratings = await this.getArrayOfRatings(dataForCards);
+
+    dataForCards.Search.forEach((dataOfCard, indexOfCard) => {
       const card = new Card({
         name: dataOfCard.Title,
         linkForName: constants.linkForName(dataOfCard.imdbID),
@@ -61,47 +71,59 @@ export default class SearchApp {
         ratingIMDb: ratings[indexOfCard],
       });
 
-      this.cards.push(card.container);
+      arrayOfCards.push(card.container);
     });
 
-    return this.cards;
+    return arrayOfCards;
   }
 
-  doSearching(e) {
+  async addCardsToSwiper() {
+    const arrayOfCards = await this.createArrayOfCards();
+    this.swiper.appendSlide(arrayOfCards);
+  }
+
+  addOneMorePage() {
+    if (this.currentPage < this.totalPages) {
+      this.currentPage += 1;
+      this.addCardsToSwiper();
+    }
+  }
+
+  async doSearching(e) {
     e.preventDefault();
     if (this.form.input.value && this.form.input.value !== this.currentWord) {
       this.currentPage = 1;
       this.currentWord = this.form.input.value;
       this.swiper.removeAllSlides();
-      this.addCardsToSwiper();
-    }
-  }
+      await this.addCardsToSwiper();
+      this.swiper.slideTo(0);
 
-  async addCardsToSwiper() {
-    await this.createArrayOfCards();
-    this.swiper.appendSlide(this.cards);
+      this.addOneMorePage();
+    }
   }
 
   resetCurrentWord() {
     this.currentWord = '';
   }
 
-  bindEventListeners() {
-    this.form.formSearch.addEventListener('submit', (event) => this.doSearching(event));
-    this.form.formSearch.addEventListener('reset', () => this.resetCurrentWord());
+  handleAddMoreSlides() {
+    if (this.currentIndex < this.swiper.activeIndex) this.currentIndex += 1;
+
+    if (this.currentIndex % constants.elementsInPage === 1) {
+      this.addOneMorePage();
+    }
   }
 
   async renderSwiper() {
-    await this.createArrayOfCards();
+    const arrayOfCards = await this.createArrayOfCards();
 
-    this.swiperSubContainer.append(...this.cards);
+    this.swiperSubContainer.append(...arrayOfCards);
 
     this.swiper = new Swiper(this.swiperContainer, {
       slidesPerView: 4,
       spaceBetween: 20,
       centerInsufficientSlides: true,
       watchOverflow: true,
-      grabCursor: true,
       observer: true,
 
       navigation: {
@@ -119,9 +141,16 @@ export default class SearchApp {
     this.body.append(this.header, this.main, this.footer);
   }
 
-  init() {
+  bindEventListeners() {
+    this.form.formSearch.addEventListener('submit', (event) => this.doSearching(event));
+    this.form.formSearch.addEventListener('reset', () => this.resetCurrentWord());
+    this.swiper.on('slideChange', () => this.handleAddMoreSlides());
+  }
+
+  async init() {
     this.renderLayout();
-    this.renderSwiper();
+    await this.renderSwiper();
     this.bindEventListeners();
+    this.addOneMorePage();
   }
 }

@@ -2,6 +2,8 @@ import create from './create';
 
 const apiKey = '50fb5534';
 
+export const elementsInPage = 10;
+
 export const header = create('header', 'header', '<h1>MovieSearch</h1>', null);
 
 export const footer = create('footer', 'footer',
