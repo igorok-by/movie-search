@@ -12,6 +12,7 @@ export default class SearchApp {
     this.body = document.body;
 
     this.form = new Input();
+    // this.currentWord = 'frrrrr';
     this.currentWord = 'paradise';
     this.currentPage = 1;
     this.totalPages = 1;
@@ -29,12 +30,18 @@ export default class SearchApp {
     this.url = '';
   }
 
+  // eslint-disable-next-line consistent-return
   async getDataFromAPI(url) {
     this.url = url;
 
-    const res = await fetch(this.url);
-    const data = await res.json();
-    return data;
+    try {
+      const res = await fetch(this.url);
+      const data = await res.json();
+
+      return data;
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   async getArrayOfRatings(data) {
@@ -53,6 +60,7 @@ export default class SearchApp {
       constants.urlSearchWord(this.currentWord, this.currentPage),
     );
 
+    this.resultDescr.innerHTML = `There are ${data.totalResults} results for '${this.currentWord}'`;
     this.totalPages = Math.ceil(Number(data.totalResults) / constants.elementsInPage);
 
     return data;
@@ -61,22 +69,27 @@ export default class SearchApp {
   async createArrayOfCards() {
     const arrayOfCards = [];
 
-    const dataForCards = await this.getDataForCards();
-    const ratings = await this.getArrayOfRatings(dataForCards);
+    try {
+      const dataForCards = await this.getDataForCards();
+      const ratings = await this.getArrayOfRatings(dataForCards);
 
-    dataForCards.Search.forEach((dataOfCard, indexOfCard) => {
-      const card = new Card({
-        name: dataOfCard.Title,
-        linkForName: constants.linkForName(dataOfCard.imdbID),
-        linkOfPoster: dataOfCard.Poster,
-        yearOfRelease: dataOfCard.Year,
-        ratingIMDb: ratings[indexOfCard],
+      dataForCards.Search.forEach((dataOfCard, indexOfCard) => {
+        const card = new Card({
+          name: dataOfCard.Title,
+          linkForName: constants.linkForName(dataOfCard.imdbID),
+          linkOfPoster: dataOfCard.Poster,
+          yearOfRelease: dataOfCard.Year,
+          ratingIMDb: ratings[indexOfCard],
+        });
+
+        arrayOfCards.push(card.container);
       });
 
-      arrayOfCards.push(card.container);
-    });
-
-    return arrayOfCards;
+      return arrayOfCards;
+    } catch (err) {
+      this.resultDescr.innerHTML = constants.apiIsExpiredSentence;
+      return err;
+    }
   }
 
   async addCardsToSwiper() {
@@ -95,13 +108,21 @@ export default class SearchApp {
   async doSearching(e) {
     e.preventDefault();
     if (this.form.input.value && this.form.input.value !== this.currentWord) {
-      this.currentPage = 1;
-      this.currentWord = this.form.input.value;
-      this.swiper.removeAllSlides();
-      await this.addCardsToSwiper();
-      this.swiper.slideTo(0);
+      const data = await this.getDataFromAPI(
+        constants.urlSearchWord(this.form.input.value, this.currentPage),
+      );
 
-      this.addOneMorePage();
+      if (!data.Error) {
+        this.currentWord = this.form.input.value;
+        this.currentPage = 1;
+        this.swiper.removeAllSlides();
+        await this.addCardsToSwiper();
+        this.swiper.slideTo(0);
+
+        this.addOneMorePage();
+      }
+
+      this.resultDescr.innerHTML = `No results were found for '${this.form.input.value}'`;
     }
   }
 
@@ -118,27 +139,34 @@ export default class SearchApp {
   }
 
   async renderSwiper() {
-    const arrayOfCards = await this.createArrayOfCards();
+    try {
+      const arrayOfCards = await this.createArrayOfCards();
+      this.swiperSubContainer.append(...arrayOfCards);
+      this.swiperSupContainer.append(this.swiperBtnNext, this.swiperBtnPrev);
 
-    this.swiperSubContainer.append(...arrayOfCards);
+      this.swiper = new Swiper(this.swiperContainer, {
+        slidesPerView: 4,
+        spaceBetween: 20,
+        centerInsufficientSlides: true,
+        watchOverflow: true,
+        observer: true,
 
-    this.swiper = new Swiper(this.swiperContainer, {
-      slidesPerView: 4,
-      spaceBetween: 20,
-      centerInsufficientSlides: true,
-      watchOverflow: true,
-      observer: true,
+        navigation: {
+          nextEl: this.swiperBtnNext,
+          prevEl: this.swiperBtnPrev,
+        },
+      });
+      this.swiper.on('slideChange', () => this.handleAddMoreSlides());
+    } catch (err) {
+      this.resultDescr.innerHTML = constants.apiIsExpiredSentence;
 
-      navigation: {
-        nextEl: this.swiperBtnNext,
-        prevEl: this.swiperBtnPrev,
-      },
-    });
+      this.form.loaderGIF.classList.remove('search__loader--shown');
+    }
   }
 
   renderLayout() {
     this.swiperContainer.append(this.swiperSubContainer);
-    this.swiperSupContainer.append(this.swiperContainer, this.swiperBtnNext, this.swiperBtnPrev);
+    this.swiperSupContainer.append(this.swiperContainer);
     this.mainContainer.append(this.form.formSearch, this.resultDescr, this.swiperSupContainer);
     this.main.append(this.mainContainer);
     this.body.append(this.header, this.main, this.footer);
@@ -147,7 +175,6 @@ export default class SearchApp {
   bindEventListeners() {
     this.form.formSearch.addEventListener('submit', (event) => this.doSearching(event));
     this.form.formSearch.addEventListener('reset', () => this.resetCurrentWord());
-    this.swiper.on('slideChange', () => this.handleAddMoreSlides());
   }
 
   async init() {

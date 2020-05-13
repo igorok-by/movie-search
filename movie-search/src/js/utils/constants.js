@@ -22,3 +22,5 @@ export const linkForName = (id) => `https://www.imdb.com/title/${id}/videogaller
 export const urlSearchWord = (searchedWord, page) => `https://www.omdbapi.com/?s=${searchedWord}&page=${page}&apikey=${apiKey}`;
 
 export const urlIMDbRating = (id) => `https://www.omdbapi.com/?i=${id}&apikey=${apiKey}`;
+
+export const apiIsExpiredSentence = 'The API key is expired. Please, contact with student';
