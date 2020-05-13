@@ -8,7 +8,9 @@ export default class Input {
 
     this.resetBtn = create('button', 'search__reset', '<svg><use xlink:href="./assets/img/sprite.svg#icon-close"></use></svg>', null, ['type', 'reset']);
 
-    this.formSearch = create('form', 'search', [this.input, this.submitBtn, this.resetBtn], null, ['action', '/']);
+    this.loaderGIF = create('img', 'search__loader', null, null, ['src', '/assets/img/loader.svg']);
+
+    this.formSearch = create('form', 'search', [this.input, this.submitBtn, this.resetBtn, this.loaderGIF], null, ['action', '/']);
 
     this.formSearch.insertAdjacentHTML('beforeend', '<svg class="search__input-icon"><use xlink:href="./assets/img/sprite.svg#icon-search"></use></svg>');
   }

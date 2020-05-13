@@ -120,3 +120,19 @@
     fill: $info;
   }
 }
+
+.search__loader {
+  position: absolute;
+  top: 50%;
+  right: rem(160);
+
+  display: none;
+  width: rem(25);
+  height: rem(25);
+
+  transform: translateY(-50%);
+
+  &--shown {
+    display: block;
+  }
+}

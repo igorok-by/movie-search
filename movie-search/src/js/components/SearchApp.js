@@ -47,6 +47,8 @@ export default class SearchApp {
   }
 
   async getDataForCards() {
+    this.form.loaderGIF.classList.add('search__loader--shown');
+
     const data = await this.getDataFromAPI(
       constants.urlSearchWord(this.currentWord, this.currentPage),
     );
@@ -79,7 +81,8 @@ export default class SearchApp {
 
   async addCardsToSwiper() {
     const arrayOfCards = await this.createArrayOfCards();
-    this.swiper.appendSlide(arrayOfCards);
+    await this.swiper.appendSlide(arrayOfCards);
+    this.form.loaderGIF.classList.remove('search__loader--shown');
   }
 
   addOneMorePage() {
