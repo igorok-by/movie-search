@@ -145,8 +145,8 @@ export default class SearchApp {
       this.swiperSupContainer.append(this.swiperBtnNext, this.swiperBtnPrev);
 
       this.swiper = new Swiper(this.swiperContainer, {
-        slidesPerView: 4,
-        spaceBetween: 20,
+        slidesPerView: 1,
+        spaceBetween: 10,
         centerInsufficientSlides: true,
         watchOverflow: true,
         observer: true,
@@ -154,6 +154,24 @@ export default class SearchApp {
         navigation: {
           nextEl: this.swiperBtnNext,
           prevEl: this.swiperBtnPrev,
+        },
+        breakpoints: {
+          320: {
+            slidesPerView: 1,
+            spaceBetween: 10,
+          },
+          600: {
+            slidesPerView: 2,
+            spaceBetween: 10,
+          },
+          800: {
+            slidesPerView: 3,
+            spaceBetween: 20,
+          },
+          1100: {
+            slidesPerView: 4,
+            spaceBetween: 20,
+          },
         },
       });
       this.swiper.on('slideChange', () => this.handleAddMoreSlides());
