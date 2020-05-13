@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 import Swiper from 'swiper';
 import * as constants from '../utils/constants';
 import create from '../utils/create';
@@ -12,7 +13,6 @@ export default class SearchApp {
     this.body = document.body;
 
     this.form = new Input();
-    // this.currentWord = 'frrrrr';
     this.currentWord = 'paradise';
     this.currentPage = 1;
     this.totalPages = 1;
@@ -30,7 +30,6 @@ export default class SearchApp {
     this.url = '';
   }
 
-  // eslint-disable-next-line consistent-return
   async getDataFromAPI(url) {
     this.url = url;
 
@@ -40,7 +39,7 @@ export default class SearchApp {
 
       return data;
     } catch (err) {
-      console.log(err);
+      return err;
     }
   }
 
