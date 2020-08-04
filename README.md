@@ -1,2 +1,1 @@
-# igorok-by-RS2020Q1
-Private repository for @igorok-by
+## Result: https://igorok-by-movie-search.netlify.app/
